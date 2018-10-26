@@ -2,6 +2,7 @@
 
 # Cores
 RED='\033[0;31m'
+LRED='\033[1;31m'
 GREEN='\033[0;32m'
 LGREEN='\033[1;32m'
 YELLOW='\033[1;33m'
@@ -36,27 +37,67 @@ usuario ()
 trocardono ()
 {
 	clear
-	echo -e "${WHITE}Você está em:"
+	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
 	echo
 	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
 	read caminho
 	
-	if [ ! -f $caminho ] && [ ! -d $caminho ]
+	if [ ! -f $caminho ] && [ ! -d $caminho ] || [ -z $caminho ]
 	then
-		echo -e "\n${YELLOW}Arquivo/diretório não encontrado${NC}"
+		echo -e "\n${LRED}Arquivo/diretório não encontrado${NC}"
 		read
-		trocardono
+		permissoes
 	else
-		echo $caminho
+		echo -e "${LBLUE}Digite o novo dono do arquivo:${NC}"
+		read novodono
+
+		if chown $novodono $caminho
+		then
+			echo
+			echo -e "${GREEN}Dono do arquivo trocado com sucesso!${NC}"
+			read
+			permissoes
+		else
+			echo
+			echo -e "${LRED}Ocorreu um erro!${NC}"
+			read
+			permissoes
+		fi
 	fi
 }
 
 trocargrupo ()
 {
 	clear
-	echo "Será implementado."
-	read
+	echo -e "${YELLOW}Você está em:"
+	echo -e "${WHITE}`pwd`"
+	echo
+	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
+	read caminho
+	
+	if [ ! -f $caminho ] && [ ! -d $caminho ] || [ -z $caminho ]
+	then
+		echo -e "\n${LRED}Arquivo/diretório não encontrado${NC}"
+		read
+		permissoes
+	else
+		echo -e "${LBLUE}Digite o novo grupo do arquivo:${NC}"
+		read novogrupo
+
+		if chgrp $novogrupo $caminho
+		then
+			echo
+			echo -e "${GREEN}Grupo do arquivo trocado com sucesso!${NC}"
+			read
+			permissoes
+		else
+			echo
+			echo -e "${LRED}Ocorreu um erro!${NC}"
+			read
+			permissoes
+		fi
+	fi
 }
 
 trocarpermissao ()
@@ -82,7 +123,7 @@ permissoes ()
 		a) trocardono ;;
 		b) trocargrupo ;;
 		c) trocarpermissao ;;
-		*) echo -e "\n${YELLOW}Opção desconhecida${NC}" ; read; permissoes ;;
+		*) echo -e "\n${LRED}Opção desconhecida!${NC}" ; read; permissoes ;;
 	esac
 }
 
@@ -109,6 +150,14 @@ principal ()
 	echo -e "${YELLOW}=               PROJETO - BASH                 ="
 	echo -e "${YELLOW}================================================"
 	echo
+	if [ "$EUID" -ne 0 ] # checa se é o root
+		then
+		echo -e "${LRED}Este programa precisa ser executado pelo usuário root"
+		echo -e "Execute o comando 'su' e tente novamente${NC}"
+		read
+		exit
+	fi
+
 	echo -e "${LBLUE}Escolha uma das opções:"
 	echo -e "${LGREEN}0${WHITE}) Fim"
 	echo -e "${LGREEN}1${WHITE}) Grupo"
@@ -124,7 +173,7 @@ principal ()
 		2) usuario ;;
 		3) permissoes ;;
 		9) sobre ;;
-		*) echo -e "\n${YELLOW}Opção desconhecida${NC}" ; read; principal ;;
+		*) echo -e "\n${LRED}Opção desconhecida!${NC}" ; read; principal ;;
 	esac
 }
 
