@@ -120,10 +120,10 @@ permissoes ()
 	read opcao_permissoes
 	case $opcao_permissoes in
 		0) principal ;;
-		a) trocardono ;;
-		b) trocargrupo ;;
-		c) trocarpermissao ;;
-		*) echo -e "\n${LRED}Opção desconhecida!${NC}" ; read; permissoes ;;
+		a|A) trocardono ;;
+		b|B) trocargrupo ;;
+		c|C) trocarpermissao ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; permissoes ;;
 	esac
 }
 
@@ -173,7 +173,7 @@ principal ()
 		2) usuario ;;
 		3) permissoes ;;
 		9) sobre ;;
-		*) echo -e "\n${LRED}Opção desconhecida!${NC}" ; read; principal ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; principal ;;
 	esac
 }
 
