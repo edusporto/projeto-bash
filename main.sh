@@ -6,7 +6,10 @@ GREEN='\033[0;32m'
 LGREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 LBLUE='\033[1;34m'
+WHITE='\033[1;37m'
 NC='\033[0m' # No color
+
+
 
 # Funções envolvendo grupos
 grupo ()
@@ -16,6 +19,8 @@ grupo ()
 	read
 }
 
+
+
 # Funções envolvendo usuários
 usuario ()
 {
@@ -24,12 +29,61 @@ usuario ()
 	read
 }
 
+
+
 # Funções envolvendo permissões
+
+trocardono ()
+{
+	clear
+	echo -e "${WHITE}Você está em:"
+	echo -e "${WHITE}`pwd`"
+	echo
+	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
+	read caminho
+	
+	if [ ! -f $caminho ] && [ ! -d $caminho ]
+	then
+		echo -e "\n${YELLOW}Arquivo/diretório não encontrado${NC}"
+		read
+		trocardono
+	else
+		echo $caminho
+	fi
+}
+
+trocargrupo ()
+{
+	clear
+	echo "Será implementado."
+	read
+}
+
+trocarpermissao ()
+{
+	clear
+	echo "Será implementado."
+	read
+}
+
 permissoes ()
 {
 	clear
-	echo "Será implementado"
-	read
+	echo -e "${LBLUE}Escolha uma das oções:"
+	echo -e "${LGREEN}0${WHITE}) Voltar"
+	echo -e "${LGREEN}a${WHITE}) Modificar o dono de um arquivo ou diretório"
+	echo -e "${LGREEN}b${WHITE}) Modificar o grupo de um arquivo ou diretório"
+	echo -e "${LGREEN}c${WHITE}) Modificar as permissões de um arquivo ou diretório${NC}"
+	echo
+
+	read opcao_permissoes
+	case $opcao_permissoes in
+		0) principal ;;
+		a) trocardono ;;
+		b) trocargrupo ;;
+		c) trocarpermissao ;;
+		*) echo -e "\n${YELLOW}Opção desconhecida${NC}" ; read; permissoes ;;
+	esac
 }
 
 sobre ()
@@ -55,12 +109,12 @@ principal ()
 	echo -e "${YELLOW}=               PROJETO - BASH                 ="
 	echo -e "${YELLOW}================================================"
 	echo
-	echo -e "${LBLUE}ESCOLHA UMA DAS OPÇÕES"
-	echo -e "${LGREEN}0${NC}) Fim"
-	echo -e "${LGREEN}1${NC}) Grupo"
-	echo -e "${LGREEN}2${NC}) Usuário"
-	echo -e "${LGREEN}3${NC}) Permissões"
-	echo -e "${LGREEN}9${NC}) Sobre"
+	echo -e "${LBLUE}Escolha uma das opções:"
+	echo -e "${LGREEN}0${WHITE}) Fim"
+	echo -e "${LGREEN}1${WHITE}) Grupo"
+	echo -e "${LGREEN}2${WHITE}) Usuário"
+	echo -e "${LGREEN}3${WHITE}) Permissões"
+	echo -e "${LGREEN}9${WHITE}) Sobre${NC}"
 	echo
 
 	read opcao
@@ -70,7 +124,7 @@ principal ()
 		2) usuario ;;
 		3) permissoes ;;
 		9) sobre ;;
-		*) echo -e "\nOpção desconhecida." ; read; principal ;;
+		*) echo -e "\n${YELLOW}Opção desconhecida${NC}" ; read; principal ;;
 	esac
 }
 
