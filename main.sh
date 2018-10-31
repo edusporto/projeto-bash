@@ -100,11 +100,61 @@ trocargrupo ()
 	fi
 }
 
+perguntarpermissao ()
+{
+	echo -e "${LGREEN}0${WHITE}) Cancelar"
+	echo -e "${LGREEN}1${WHITE}) Nenhuma permissão"
+	echo -e "${LGREEN}2${WHITE}) Apenas execução"
+	echo -e "${LGREEN}3${WHITE}) Apenas escrita"
+	echo -e "${LGREEN}4${WHITE}) Escrita e execução"
+	echo -e "${LGREEN}5${WHITE}) Leitura"
+	echo -e "${LGREEN}6${WHITE}) Leitura e execução"
+	echo -e "${LGREEN}7${WHITE}) Leitura e escrita"
+	echo -e "${LGREEN}8${WHITE}) Leitura, escrita e execução"
+	echo
+	read permissaoselecionada
+
+	case $permissaoselecionada in
+		[1-8]) resultadopermissao=$(($permissaoselecionada-1)) ; return 0 ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; resultadopermissao='-1' ; read; return 1 ;;
+	esac
+}
+
 trocarpermissao ()
 {
 	clear
-	echo "Será implementado."
-	read
+	echo -e "${YELLOW}Você está em:"
+	echo -e "${WHITE}`pwd`"
+	echo
+	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
+	read caminho
+
+	if [ ! -f $caminho ] && [ ! -d $caminho ] || [ -z $caminho ]
+	then
+		echo -e "\n${LRED}Arquivo/diretório não encontrado${NC}"
+		read
+		permissoes
+	else
+		echo
+		echo -e "${LBLUE}Selecione as permissões do dono do arquivo:"
+
+		resultadopermissao=-1
+		permissoesselecionadas=""
+		if perguntarpermissao
+		then
+			permissoesseleionadas="$permissoesselecionadas$resultadopermissao"
+			echo
+			echo -e "${LBLUE}Selecione as permissões do grupo do arquivo:"
+
+			if perguntarpermissao
+			then
+				permissoesseleionadas="$permissoesseleionadas$resultadopermissao"
+			else
+
+		else
+			permissoes
+		fi
+	fi
 }
 
 permissoes ()
