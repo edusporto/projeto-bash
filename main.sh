@@ -17,7 +17,9 @@ grupo ()
 {
 	clear
 	echo "Será implementado."
-	read
+	read 
+
+	main
 }
 
 
@@ -28,6 +30,8 @@ usuario ()
 	clear
 	echo "Será implementado"
 	read
+
+	main
 }
 
 
@@ -39,6 +43,7 @@ trocardono ()
 	clear
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
+	echo -e "${WHITE}`ls -la`"
 	echo
 	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
 	read caminho
@@ -102,7 +107,6 @@ trocargrupo ()
 
 perguntarpermissao ()
 {
-	echo -e "${LGREEN}0${WHITE}) Cancelar"
 	echo -e "${LGREEN}1${WHITE}) Nenhuma permissão"
 	echo -e "${LGREEN}2${WHITE}) Apenas execução"
 	echo -e "${LGREEN}3${WHITE}) Apenas escrita"
@@ -111,6 +115,7 @@ perguntarpermissao ()
 	echo -e "${LGREEN}6${WHITE}) Leitura e execução"
 	echo -e "${LGREEN}7${WHITE}) Leitura e escrita"
 	echo -e "${LGREEN}8${WHITE}) Leitura, escrita e execução"
+	echo -e "${LGREEN}0${WHITE}) Cancelar"
 	echo
 	read permissaoselecionada
 
@@ -149,8 +154,7 @@ trocarpermissao ()
 			if perguntarpermissao
 			then
 				permissoesseleionadas="$permissoesseleionadas$resultadopermissao"
-			else
-
+			fi
 		else
 			permissoes
 		fi
@@ -161,15 +165,15 @@ permissoes ()
 {
 	clear
 	echo -e "${LBLUE}Escolha uma das oções:"
-	echo -e "${LGREEN}0${WHITE}) Voltar"
 	echo -e "${LGREEN}a${WHITE}) Modificar o dono de um arquivo ou diretório"
 	echo -e "${LGREEN}b${WHITE}) Modificar o grupo de um arquivo ou diretório"
 	echo -e "${LGREEN}c${WHITE}) Modificar as permissões de um arquivo ou diretório${NC}"
+	echo -e "${LGREEN}0${WHITE}) Voltar"
 	echo
 
 	read opcao_permissoes
 	case $opcao_permissoes in
-		0) principal ;;
+		0) main ;;
 		a|A) trocardono ;;
 		b|B) trocargrupo ;;
 		c|C) trocarpermissao ;;
@@ -190,17 +194,19 @@ sobre ()
 	echo
 	echo -e "${YELLOW}O programa foi feito para funcionar em Debian."
 	read
-	principal
+
+	main
 }
 
-principal ()
+main ()
 {
 	clear
 	echo -e "${YELLOW}================================================"
 	echo -e "${YELLOW}=               PROJETO - BASH                 ="
 	echo -e "${YELLOW}================================================"
 	echo
-	if [ "$EUID" -ne 0 ] # checa se é o root
+
+	if [ $EUID -ne 0 ] # checa se é o root
 		then
 		echo -e "${LRED}Este programa precisa ser executado pelo usuário root"
 		echo -e "Execute o comando 'su' e tente novamente${NC}"
@@ -209,11 +215,11 @@ principal ()
 	fi
 
 	echo -e "${LBLUE}Escolha uma das opções:"
-	echo -e "${LGREEN}0${WHITE}) Fim"
 	echo -e "${LGREEN}1${WHITE}) Grupo"
 	echo -e "${LGREEN}2${WHITE}) Usuário"
 	echo -e "${LGREEN}3${WHITE}) Permissões"
 	echo -e "${LGREEN}9${WHITE}) Sobre${NC}"
+	echo -e "${LGREEN}0${WHITE}) Sair"
 	echo
 
 	read opcao
@@ -223,8 +229,8 @@ principal ()
 		2) usuario ;;
 		3) permissoes ;;
 		9) sobre ;;
-		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; principal ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; main ;;
 	esac
 }
 
-principal
+main
