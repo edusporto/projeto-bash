@@ -43,6 +43,8 @@ trocardono ()
 	clear
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
+	echo
+	echo -e "${YELLOW}Arquivos neste diretório:"
 	echo -e "${WHITE}`ls -la`"
 	echo
 	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
@@ -77,6 +79,9 @@ trocargrupo ()
 	clear
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
+	echo
+	echo -e "${YELLOW}Arquivos neste diretório:"
+	echo -e "${WHITE}`ls -la`"
 	echo
 	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
 	read caminho
@@ -131,6 +136,9 @@ trocarpermissao ()
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
 	echo
+	echo -e "${YELLOW}Arquivos neste diretório:"
+	echo -e "${WHITE}`ls -la`"
+	echo
 	echo -e "${LBLUE}Digite o caminho até o arquivo ou diretório que deseja alterar:${NC}"
 	read caminho
 
@@ -147,13 +155,30 @@ trocarpermissao ()
 		permissoesselecionadas=""
 		if perguntarpermissao
 		then
-			permissoesseleionadas="$permissoesselecionadas$resultadopermissao"
+			permissoesselecionadas="$permissoesselecionadas$resultadopermissao"
 			echo
 			echo -e "${LBLUE}Selecione as permissões do grupo do arquivo:"
 
 			if perguntarpermissao
 			then
-				permissoesseleionadas="$permissoesseleionadas$resultadopermissao"
+				permissoesselecionadas="$permissoesselecionadas$resultadopermissao"
+				echo
+				echo -e "${LBLUE}Selecione as permissões dos outros usuários:"
+
+				if perguntarpermissao
+				then
+					permissoesselecionadas="$permissoesselecionadas$resultadopermissao"
+					echo
+					
+					if chmod $permissoesselecionadas $caminho
+					then
+						echo -e "${GREEN}Permissões alteradas com sucesso!"
+					else
+						echo -e "${LRED}Ocorreu algum erro!"
+					fi
+					read
+					permissoes
+				fi
 			fi
 		else
 			permissoes
