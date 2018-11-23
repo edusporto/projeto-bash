@@ -16,22 +16,141 @@ NC='\033[0m' # No color
 grupo ()
 {
 	clear
-	echo "Será implementado."
-	read 
+	echo -e "${YELLOW}=================== GRUPO ======================"
+	echo
+	echo -e "${LBLUE}Escolha uma das oções:"
+	echo -e "${LGREEN}a${WHITE}) Criar grupo"
+	echo -e "${LGREEN}b${WHITE}) Alterar o nome de um grupo"
+	echo -e "${LGREEN}0${WHITE}) Voltar"
+	echo
 
-	main
+	read opcao_grupo
+	case $opcao_grupo in
+		0) main ;;
+		a|A) criargrupo ;;
+		b|B) alterargrupo ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; grupo ;;
+	esac
 }
 
+criargrupo()
+{
+	clear
+	echo -e "${YELLOW}================ CRIAR GRUPO ==================="
+	echo
+	echo -e "${YELLOW}Grupos que já existem:"
+	echo -e "${WHITE}`cut -d: -f1 /etc/group | sort`"
+	echo
+	echo -e "${LBLUE}Digite o nome do grupo que deseja criar:${NC}"
+	read novogrupo
+
+	if [ ! $(getent group $novogrupo) ]
+	then
+		if groupadd $novogrupo 
+		then
+			echo -e "${GREEN}Grupo criado com sucesso!${NC}"
+			read
+			grupo
+		else
+			echo
+			echo -e "${LRED}Ocorreu um erro!${NC}"
+			read
+			grupo
+		fi
+	else
+		echo
+		echo -e "${LRED}O grupo '$novogrupo' já existe!${NC}"
+		read
+		criargrupo
+	fi
+}
+
+alterargrupo()
+{
+	clear
+	echo -e "${YELLOW}=============== ALTERAR GRUPO =================="
+	echo
+	echo -e "${YELLOW}Grupos que existentes:"
+	echo -e "${WHITE}`cut -d: -f1 /etc/group | sort`"
+	echo
+	echo -e "${LBLUE}Digite qual grupo que deseja alterar:${NC}"
+	read grupo
+
+	echo -e "${LBLUE}Digite qual será o novo nome do grupo:${NC}"
+	read novogrupo
+
+	if [ $(getent group $grupo) ]
+	then
+		if [ ! $(getent group $novogrupo) ]
+		then
+			if groupmod $grupo $novogrupo
+			then
+				echo -e "${GREEN}Grupo alterado com sucesso!${NC}"
+				read
+				grupo
+			else
+				echo
+				echo -e "${LRED}Ocorreu um erro!${NC}"
+				read
+				grupo
+			fi
+		else
+			echo
+			echo -e "${LRED}O grupo '$novogrupo' já existe!${NC}"
+			read
+			alterargrupo
+		fi
+	else
+		echo
+		echo -e "${LRED}O grupo '$grupo' não existe!${NC}"
+		read
+		alterargrupo
+	fi
+}
 
 
 # Funções envolvendo usuários
 usuario ()
 {
 	clear
-	echo "Será implementado"
-	read
+	echo -e "${YELLOW}================== USUÁRIO ====================="
+	echo
+	echo -e "${LBLUE}Escolha uma das oções:"
+	echo -e "${LGREEN}a${WHITE}) Criar usuário"
+	echo -e "${LGREEN}0${WHITE}) Voltar"
+	echo
 
-	main
+	read opcao_usuario
+	case $opcao_usuario in
+		0) main ;;
+		a|A) criarusuario ;;
+		*) echo -e "${LRED}Opção desconhecida!${NC}" ; read; usuario ;;
+	esac
+}
+
+criarusuario()
+{
+	clear
+	echo -e "${YELLOW}=============== CRIAR USUÁRIO =================="
+	echo
+	echo -e "${YELLOW}Usuário locais que já existem:"
+	echo -e "${WHITE}`cut -d: -f1 /etc/passwd | sort`"
+	echo
+	echo -e "${LBLUE}Digite o novo usuário que deseja criar:${NC}"
+	read novousuario
+
+	if adduser $novousuario
+	then
+		echo
+		echo -e "${GREEN}Usuário criado com sucesso!${NC}"
+		read
+		usuario
+	else
+		echo
+		echo -e "${LRED}Ocorreu um erro!${NC}"
+		read
+		usuario
+	fi
 }
 
 
@@ -41,6 +160,8 @@ usuario ()
 trocardono ()
 {
 	clear
+	echo -e "${YELLOW}================ TROCAR DONO ==================="
+	echo
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
 	echo
@@ -77,6 +198,8 @@ trocardono ()
 trocargrupo ()
 {
 	clear
+	echo -e "${YELLOW}=============== TROCAR GRUPO ==================="
+	echo
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
 	echo
@@ -112,6 +235,9 @@ trocargrupo ()
 
 perguntarpermissao ()
 {
+	clear
+	echo -e "${YELLOW}=========== SELECIONAR PERMISSÕES =============="
+	echo
 	echo -e "${LGREEN}1${WHITE}) Nenhuma permissão"
 	echo -e "${LGREEN}2${WHITE}) Apenas execução"
 	echo -e "${LGREEN}3${WHITE}) Apenas escrita"
@@ -133,6 +259,8 @@ perguntarpermissao ()
 trocarpermissao ()
 {
 	clear
+	echo -e "${YELLOW}============= TROCAR PERMISSÕES ================"
+	echo
 	echo -e "${YELLOW}Você está em:"
 	echo -e "${WHITE}`pwd`"
 	echo
@@ -189,6 +317,8 @@ trocarpermissao ()
 permissoes ()
 {
 	clear
+	echo -e "${YELLOW}================ PERMISSÕES ===================="
+	echo
 	echo -e "${LBLUE}Escolha uma das oções:"
 	echo -e "${LGREEN}a${WHITE}) Modificar o dono de um arquivo ou diretório"
 	echo -e "${LGREEN}b${WHITE}) Modificar o grupo de um arquivo ou diretório"
@@ -206,9 +336,14 @@ permissoes ()
 	esac
 }
 
+
+# Funções gerais do programa
+
 sobre ()
 {
 	clear
+	echo -e "${YELLOW}=================== SOBRE ======================"
+	echo
 	echo -e "${YELLOW}Projeto desenvolvido por: "
 	echo
 	echo -e "${NC}17167 - Caio Petrucci dos Santos Rosa"
