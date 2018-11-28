@@ -259,8 +259,6 @@ trocargrupo ()
 
 perguntarpermissao ()
 {
-	clear
-	echo -e "${YELLOW}=========== SELECIONAR PERMISSÕES =============="
 	echo
 	echo -e "${LGREEN}1${WHITE}) Nenhuma permissão"
 	echo -e "${LGREEN}2${WHITE}) Apenas execução"
